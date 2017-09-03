@@ -1,16 +1,11 @@
 package com.rss.tictactoe.dto;
 
-import com.rss.tictactoe.game.Board;
-import com.rss.tictactoe.game.Player;
-
 import java.util.Arrays;
-
-import static com.rss.tictactoe.game.Player.FIRST;
-import static com.rss.tictactoe.game.Player.SECOND;
 
 public class BoardDTO {
 
   private char[][] board;
+  private String status;
 
   public BoardDTO() {
     int dim = 3;
@@ -21,11 +16,9 @@ public class BoardDTO {
   }
 
   public BoardDTO(char[][] board) {
-    this.board = Arrays.stream(board).map(el -> el.clone()).toArray($ -> board.clone());
-  }
-
-  public BoardDTO(Board board) {
-    this.board = Arrays.stream(board.getBoard()).map(el -> el.clone()).toArray($ -> board.getBoard());
+    this.board = Arrays.stream(board)
+        .map(el -> el.clone())
+        .toArray($ -> board.clone());
   }
 
   public char[][] getBoard() {
@@ -36,26 +29,11 @@ public class BoardDTO {
     this.board = board;
   }
 
-  public Board createBoard() {
-    Board board = new Board();
-    board.setBoard(this.board);
-    board.setPlayer(evaluatePlayer());
-
-    return board;
+  public String getStatus() {
+    return status;
   }
 
-  private Player evaluatePlayer() {
-    int countX = 0;
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board.length; j++) {
-        if (board[i][j] == 'X') {
-          countX++;
-        } else if (board[i][j] == 'O') {
-          countX--;
-        }
-      }
-    }
-    return countX == 0 ? FIRST : SECOND;
+  public void setStatus(String status) {
+    this.status = status;
   }
-
 }

@@ -4,11 +4,14 @@ import com.rss.tictactoe.game.Board;
 import com.rss.tictactoe.game.Direction;
 import com.rss.tictactoe.game.Line;
 import com.rss.tictactoe.game.Move;
+import org.springframework.stereotype.Service;
 
 
+@Service
 public class MoveService {
+  private static final int MAX_RECURSION_DEPTH = 2;
 
-  public static Board makeMove(Board board, int recursionDepth) {
+  public Board makeMove(Board board, int recursionDepth) {
     if (movesLeft(board) == 0) {
       throw new IllegalArgumentException();
     }
@@ -18,7 +21,37 @@ public class MoveService {
     return board;
   }
 
-  public static Move getMove(Board board, int recursionDepth) {
+  public String getStatus(Board board) {
+    char[][] brd = board.getBoard();
+    if (checkBoard(brd, 'X')) {
+          return "X wins!";
+    }
+    if (checkBoard(brd, 'O')) {
+      return "O wins!";
+    }
+    if (movesLeft(board) == 0) {
+      return "Draw!";
+    }
+
+    return "Playing!";
+  }
+
+  private boolean checkBoard(char[][] brd, char ch) {
+    return (brd[0][0] == brd[0][1] && brd[0][1] == brd[0][2] && brd[0][2] == ch) ||
+        (brd[1][0] == brd[1][1] && brd[1][1] == brd[1][2] && brd[1][2] == ch) ||
+        (brd[2][0] == brd[2][1] && brd[2][1] == brd[2][2] && brd[2][2] == ch) ||
+        (brd[0][0] == brd[1][0] && brd[1][0] == brd[2][0] && brd[2][0] == ch) ||
+        (brd[0][1] == brd[1][1] && brd[1][1] == brd[2][1] && brd[2][1] == ch) ||
+        (brd[0][2] == brd[1][2] && brd[1][2] == brd[2][2] && brd[2][2] == ch) ||
+        (brd[0][0] == brd[1][1] && brd[1][1] == brd[2][2] && brd[2][2] == ch) ||
+        (brd[0][2] == brd[1][1] && brd[1][1] == brd[2][0] && brd[2][0] == ch);
+  }
+
+  public Move getMove(Board board, int recursionDepth) {
+    if (movesLeft(board) == 0) {
+      throw new IllegalArgumentException();
+    }
+
     int dim = board.getDim();
     int weight = Integer.MIN_VALUE;
     Move move = null;
@@ -35,7 +68,7 @@ public class MoveService {
     return move;
   }
 
-  private static int getMoveWeight(Board board, int x, int y, int recursionDepth) {
+  private int getMoveWeight(Board board, int x, int y, int recursionDepth) {
     if (!board.isValidMove(x,y)) {
       return Integer.MIN_VALUE;
     }
@@ -53,7 +86,7 @@ public class MoveService {
       }
     }
 
-    if (recursionDepth >= 1 || movesLeft(board) <= 1) {
+    if (recursionDepth >= MAX_RECURSION_DEPTH || movesLeft(board) <= 1) {
       return weight;
     }
 
@@ -64,13 +97,13 @@ public class MoveService {
     return weight - getMoveWeight(newBoard, move.getX(), move.getY(), recursionDepth + 1);
   }
 
-  private static Line getLine(Board board, Direction direction, int x, int y) {
+  private Line getLine(Board board, Direction direction, int x, int y) {
     return new Line(0,1)
         .add(getLine(board, direction, x, y, new Line()))
         .add(getLine(board, direction.getOpposite(), x, y, new Line()));
   }
 
-  private static Line getLine(Board board, Direction direction, int x, int y, Line line) {
+  private Line getLine(Board board, Direction direction, int x, int y, Line line) {
     if (!isValidDirection(board, direction, x, y)) {
       return line;
     }
@@ -90,7 +123,7 @@ public class MoveService {
 
   }
 
-  private static boolean isValidDirection(Board board, Direction direction, int x, int y) {
+  private boolean isValidDirection(Board board, Direction direction, int x, int y) {
 
     return (direction.getX() + x >= 0) &&
         (direction.getX() + x < board.getDim()) &&
@@ -98,7 +131,7 @@ public class MoveService {
         (direction.getY() + y < board.getDim());
   }
 
-  public static int movesLeft(Board board) {
+  public int movesLeft(Board board) {
     int count = 0;
     int dim = board.getDim();
     for (int i = 0; i < dim; i++) {
