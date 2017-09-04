@@ -6,4 +6,4 @@
 
 docker rmi tic-tac-toe
 docker build -t tic-tac-toe .
-docker run -ti -p 8080:8080 tic-tac-toe
+docker run -ti -p 8080:8080 -d tic-tac-toe

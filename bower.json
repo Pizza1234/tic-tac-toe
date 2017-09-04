@@ -1,7 +1,7 @@
 {
   "name": "tic-tac-toe",
   "authors": [
-    "Kitsenko Yuriy"
+    "Pizza1234"
   ],
   "description": "Tic-Tac-Toe implemented in Spring Boot and Angular JS",
   "main": "index.html",
