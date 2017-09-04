@@ -47,7 +47,7 @@ To run the image, type:
 
 `docker run -ti -p 8080:8080 -d tic-tac-toe`
 
-Also there is already builded jar in 'docker' folder, so one can skip building
+Also there is already built jar in 'docker' folder, so one can skip building
 application section.
 
 ## Rest Service Description
@@ -79,13 +79,13 @@ in response board. In other case the board with the move made will be returned.
 
 E. Swagger-ui is attached as a REST API Description Service and is available on:
 
-'http://yourhostip:8080/swagger-ui.html'.
+'http://localhost:8080/swagger-ui.html'.
 
-Here and below 'yourhostip' should be changed to ip address of the instance where application
+Here and below 'localhost' should be changed to ip address of the instance where application
 is running.
 
 ## Web-UI Description
 
 Web-UI is available at:
 
-'http://yourhostip:8080/'.
+'http://localhost:8080/'.
